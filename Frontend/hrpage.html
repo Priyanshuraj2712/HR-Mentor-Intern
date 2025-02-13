@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR page</title>
+    <link rel="stylesheet" href="hrpage.css">
+</head>
+<body>
+    <div class="banner">
+        <div class="sidebar">
+            <div>
+                <img src=".logo.png" class="img" alt="">
+            </div>
+
+
+            <div class="links">
+                <ul>
+                    <li onclick="one()">Internship requests</li>
+                    <li onclick="two()">Add student</li>
+                    <li onclick="three()">Remove Student</li>
+                    <li onclick="four()">Assign Mentor</li>
+                    <li onclick="five()">Assign Certificatee</li>
+                    <li id="logout">Logout</li>
+                </ul>
+            </div>
+
+            
+        </div>
+
+        <div class="content">
+                <div class="profile">
+                    <img src="./PP.png" class="img2" alt="">
+                    <ul class="dropdown">
+                        <li>view profile</li>
+                        <li>logout</li>
+                    </ul>
+                </div>
+
+                <div class="area">
+
+
+                    <div class="Internship_requests" id="IR">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Age</th>
+                                    <th>Mobile</th>
+                                    <th>Email</th>
+                                    <th>Permanent Address</th>
+                                    <th>Current Address</th>
+                                    <th>Education</th>
+                                    <th>Grades</th>
+                                    <th>Family DRDO</th>
+                                    <th>Past Experience</th>
+                                    <th>DRDO Labs</th>
+                                    <th>Aadhar</th>
+                                    <th>Identification Mark</th>
+                                </tr>
+                            </thead>
+                            <tbody id="internTableBody">
+                                <!-- Interns will be added here -->
+                            </tbody>
+                        </table>
+                        
+                    </div>
+                  
+
+                    <div class="Add_student" id="AS">
+                        <form class="editlist" id="addstudent">
+                            
+                            <h2 class="heading">Add Student For Internship</h2>
+                            <h5></h5>
+                            <input type="text" name="name" placeholder="Full Name" required>
+                            <input type="number" name="age" placeholder="Age" required>
+                            <input type="text" name="mobile" placeholder="Mobile" required>
+                            <input type="email" name="email" placeholder="Email" required>
+                            <input type="text" name="addressPermanent" placeholder="Permanent Address">
+                            <input type="text" name="addressCurrent" placeholder="Current Address">
+                            <input type="text" name="education" placeholder="Education">
+                            <input type="text" name="grades" placeholder="Grades">
+                            <input type="text" name="familyDRDO" placeholder="Family in DRDO? (Yes/No)">
+                            <input type="text" name="pastExperience" placeholder="Past Experience">
+                            <input type="text" name="drdoLabs" placeholder="DRDO Labs Worked At">
+                            <input type="text" name="aadhar" placeholder="Aadhar Number" required>
+                            <input type="text" name="identificationMark" placeholder="Identification Mark">
+                            <button type="submit">Add Intern</button>
+                        </form>
+                    </div>
+
+                    <div class="Remove_student" id="RS">
+                        <form id="remove-student">
+                            <h1>Remove Student</h1>
+                            <input type="text" name="aadhar" placeholder="Aadhar Number" required>
+                            <button type="submit" id="deleteBtn">Remove Intern</button>
+                        </form>
+                    </div>
+
+                    <div class="Assign_mentor" id="AM">
+                        <form id="assign-mentor-form">
+                            <select id="mentorId" required>
+                                <option value="">Select Mentor</option>
+                            </select>
+                            <input type="text" id="internName" placeholder="Enter Intern Name" required />
+                            <button type="submit">Assign Mentor</button>
+                        </form>
+                    </div>
+
+                    <div class="Assign_certificate" id="AC">
+                        <form id="assign-certificate-form">
+                                <input type="text" name="certificateUrl" placeholder="Certificate URL" required>
+                                <button type="submit">Assign Certificate</button>
+                        </form>            
+                    </div>
+                    
+                    
+                </div>
+        </div>
+    </div>
+
+    <script>
+        var a = document.getElementById("IR")
+        var b = document.getElementById("AS")
+        var c = document.getElementById("RS")
+        var d = document.getElementById("AM")
+        var e = document.getElementById("AC")
+
+        function one(){
+            a.style.top = "0px";
+            b.style.top = "500px";
+            c.style.top = "1000px";
+            d.style.top = "1500px";
+            e.style.top = "2000px";       
+        }
+        function two(){
+            a.style.top = "-500px";
+            b.style.top = "0px";
+            c.style.top = "500px";
+            d.style.top = "1000px";
+            e.style.top = "1500px";       
+        }
+        function three(){
+            a.style.top = "-1000px";
+            b.style.top = "-500px";
+            c.style.top = "00px";
+            d.style.top = "500px";
+            e.style.top = "1000px";       
+        }
+        function four(){
+            a.style.top = "-1500px";
+            b.style.top = "-1000px";
+            c.style.top = "-500px";
+            d.style.top = "0px";
+            e.style.top = "500px";       
+        }
+        function five(){
+            a.style.top = "-2000px";
+            b.style.top = "-1500px";
+            c.style.top = "-1000px";
+            d.style.top = "-500px";
+            e.style.top = "00px";       
+        }
+    </script>
+    <script>
+       document.addEventListener("DOMContentLoaded", () => {
+    fetchInterns();
+
+    document.getElementById("addstudent").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const data = Object.fromEntries(formData.entries());
+
+        const response = await fetch("http://localhost:3000/add-student", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+            alert("Intern added successfully!");
+            fetchInterns();
+        } else {
+            alert("Error adding intern.");
+        }
+    });
+
+    document.getElementById("remove-student").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const aadhar = event.target.aadhar.value;
+
+        const response = await fetch(`http://localhost:3000/remove-student/${aadhar}`, {
+            method: "DELETE",
+        });
+
+        if (response.ok) {
+            alert("Intern removed successfully!");
+            fetchInterns();
+        } else {
+            alert("Error removing intern.");
+        }
+    });
+
+    document.getElementById("logout").addEventListener("click", () => {
+        alert("Logged out!");
+        window.location.href = "home.html";
+    });
+});
+
+async function fetchInterns() {
+    const response = await fetch("http://localhost:3000/interns");
+    const interns = await response.json();
+    const tableBody = document.getElementById("internTableBody");
+    tableBody.innerHTML = interns.map(intern => `
+        <tr>
+            <td>${intern.name}</td>
+            <td>${intern.age}</td>
+            <td>${intern.mobile}</td>
+            <td>${intern.email}</td>
+            <td>${intern.addressPermanent}</td>
+            <td>${intern.addressCurrent}</td>
+            <td>${intern.education}</td>
+            <td>${intern.grades}</td>
+            <td>${intern.familyDRDO}</td>
+            <td>${intern.pastExperience}</td>
+            <td>${intern.drdoLabs}</td>
+            <td>${intern.aadhar}</td>
+            <td>${intern.identificationMark}</td>
+        </tr>
+    `).join("");
+}
+
+function showSection(sectionId) {
+    document.querySelectorAll('.area > div').forEach(div => {
+        div.style.display = div.id === sectionId ? "block" : "none";
+    });
+}
+
+async function fetchMentors() {
+    try {
+        const response = await fetch("http://localhost:3000/mentors");
+        const mentors = await response.json();
+        const mentorSelect = document.getElementById("mentorId");
+
+        mentorSelect.innerHTML = `<option value="">Select Mentor</option>`;
+        mentors.forEach(mentor => {
+            mentorSelect.innerHTML += `<option value="${mentor.id}">${mentor.email}</option>`;
+        });
+    } catch (error) {
+        console.error("Error fetching mentors:", error);
+    }
+}
+
+
+        async function assignMentor(event) {
+            event.preventDefault();
+            document.getElementById("assign-mentor-form").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    
+    const internName = document.getElementById("internName").value.trim();
+    const mentorId = document.getElementById("mentorId").value.trim();
+
+    if (!internName || !mentorId) {
+        alert("Please enter both an intern name and a mentor ID.");
+        return;
+    }
+
+    try {
+        // Fetch intern ID by name
+        const internResponse = await fetch(`http://localhost:3000/interns?name=${internName}`);
+        const internData = await internResponse.json();
+
+        if (!internData || internData.length === 0) {
+            alert("No intern found with this name.");
+            return;
+        }
+
+        const internId = internData[0]._id; // Get the intern's actual ID
+
+        // Assign mentor using intern ID
+        const assignResponse = await fetch("http://localhost:3000/assign-mentor", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ internId, mentorId }),
+        });
+
+        if (assignResponse.ok) {
+            alert("Mentor assigned successfully!");
+        } else {
+            alert("Error assigning mentor.");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        alert("An error occurred while assigning the mentor.");
+    }
+});
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchInterns();
+            fetchMentors(); // Fetch mentors when the page loads
+
+            document.getElementById("assign-mentor-form").addEventListener("submit", assignMentor);
+        });
+
+
+    document.getElementById("assign-certificate-form").addEventListener("submit", function (event) {
+        event.preventDefault();
+        const internId = this.internId.value;
+        const certificateLink = this.certificateUrl.value;
+
+        if (!certificateLink) {
+            alert("Certificate link is required.");
+            return;
+        }
+
+        fetch('/assign-certificate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ internId, certificateLink })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    alert("Certificate assigned and email sent!");
+                    fetch('/interns')
+                        .then(response => response.json())
+                        .then(interns => {
+                            const internList = document.getElementById("IR");
+                            internList.innerHTML = ""; // Clear previous content
+
+                            interns.forEach(intern => {
+                                const row = document.createElement("tr");
+                                row.innerHTML = `
+                                    <td>${intern.name}</td>
+                                    <td>${intern.email}</td>
+                                    <td>
+                                        <button onclick="document.getElementById('mentor-email').value = ''; document.getElementById('mentor-email').setAttribute('data-intern-id', '${intern._id}')">Assign Mentor</button>
+                                        <button onclick="removeIntern('${intern._id}')">Remove</button>
+                                    </td>
+                                `;
+                                internList.appendChild(row);
+                            });
+                        });
+                }
+            })
+            .catch(error => console.error("Error assigning certificate:", error));
+    });
+
+
+    </script>
+</body>
+</html>

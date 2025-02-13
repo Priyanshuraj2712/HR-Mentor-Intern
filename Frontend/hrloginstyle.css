@@ -1,0 +1,99 @@
+html,body{
+    height: 100%;
+}
+
+.banner{
+    height: 100%;
+    width: 100%;
+    background-image: url(./HRbackground.jpg);
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+}
+.form-box{
+    height: 400px;
+    width: 350px;
+    background-color: white;
+    position: relative;
+    margin: 100px 65%;
+    padding: 2px;
+    display: flex;
+    overflow: hidden;
+}
+.button-box{
+    width: 250px;
+    height: 40px;
+    margin: 35px auto;
+    position: relative;
+    display: flex;
+    box-shadow: 0 5px 9px rgba(9, 5, 5, 0.5);
+    border-radius: 25px;
+}
+.toggle-btn{
+    height: 35px;
+    padding: 10px 30px;
+    background: transparent;
+    cursor: pointer;
+    outline: none;
+    position: relative;
+    border: 0;
+}
+#btn{
+    top: 0;
+    left: 0;
+    position: absolute;
+    width: 125px;
+    height: 100%;
+    background: linear-gradient(to right, #ff105f ,#ffad06);
+    /* background:linear-gradient(to right , #1cbfd8 , #68f866); */
+    border-radius: 25px;
+    transition: 0.5s;
+}
+.input{
+    top: 130px;
+    left: 0px;
+    margin: auto;
+    width: 200px;
+    position: absolute;
+    transition: 0.5s;
+    
+    text-align: left;
+}
+
+.input-field{
+    margin: 15px;
+    padding: auto;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 1px solid black;
+    background: transparent;
+    outline: none;
+    font-size: 15px;
+    text-align: left;
+}
+.submit{
+    margin: auto;
+    width: 85%;
+    display: block;
+    cursor: pointer;
+    padding: 6px 35px;
+    border: 0;
+    border-radius: 25px;
+    background-image: linear-gradient(to right, #ff105f ,#ffad06);
+
+}
+.checkbox{
+    margin: 30px 10px 30px 0;
+}
+.span{
+    color: #777;
+    position: absolute;
+    bottom: 56px;
+} 
+#login{
+    left: 50px;
+}
+#register{
+    left: 400px;
+}
