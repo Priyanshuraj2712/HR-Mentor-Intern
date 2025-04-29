@@ -4,3 +4,13 @@ Added HR Login/Register Page
 Added Mentor Login/Register Page
 <br>
 Connected MongoDb with the frontend
+<br>
+Added assets(images) used in the project
+<br>
+Updates in HR Login/Register Page
+<br>
+Added the css file for styling of HR Login/Register page
+<br>
+Updates in MentorLogin/Register Page
+<br>
+Added the css file for styling of Mentor Login/Register page

@@ -1,89 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mentor Login</title>
-    <link rel="stylesheet" href="mentorlogin.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mentor Login</title>
+  <link rel="stylesheet" href="mentorlogin.css">
 </head>
 <body>
-    <div class="banner">
-        <div class="form-box">
-            <div class="button-box">
-                <div id="btn"></div>
-                <button class="toggle-btn" onclick="showLogin()">LOG IN</button>
-                <button class="toggle-btn" onclick="showRegister()">REGISTER</button>
-            </div>
+  <div class="banner">
+    <div class="form-box">
+      <div class="button-box">
+        <div id="btn"></div>
+        <button type="button" class="toggle-btn" onclick="showLogin()">LOG IN</button>
+        <button type="button" class="toggle-btn" onclick="showRegister()">REGISTER</button>
+      </div>
 
-            <!-- Login Form -->
-            <form class="input" id="login-form">
-                <input type="email" id="login-email" class="input-field" placeholder="Email" required>
-                <input type="password" id="login-password" class="input-field" placeholder="Enter password" required>
-                <button type="submit" class="submit">Log In</button>
-            </form>
+      <!-- Login Form -->
+      <form id="login" class="input">
+        <input type="email" id="login-email" class="input-field" placeholder="Email" required>
+        <input type="password" id="login-password" class="input-field" placeholder="Password" required>
+        <button type="submit" class="submit">Log In</button>
+      </form>
 
-            <!-- Register Form -->
-            <form class="input" id="register-form">
-                <input type="email" id="register-email" class="input-field" placeholder="Email" required>
-                <input type="password" id="register-password" class="input-field" placeholder="Enter password" required>
-                <button type="submit" class="submit">Register</button>
-            </form>
-        </div>
+      <!-- Register Form -->
+      <form id="register" class="input">
+        <input type="email" id="register-email" class="input-field" placeholder="Email" required>
+        <input type="password" id="register-password" class="input-field" placeholder="Password" required>
+        <button type="submit" class="submit">Register</button>
+      </form>
     </div>
+  </div>
 
-    <script>
-        function showRegister() {
-            document.getElementById("login-form").style.display = "none";
-            document.getElementById("register-form").style.display = "block";
-        }
+  <script>
+    const loginForm = document.getElementById("login");
+    const registerForm = document.getElementById("register");
+    const btn = document.getElementById("btn");
 
-        function showLogin() {
-            document.getElementById("login-form").style.display = "block";
-            document.getElementById("register-form").style.display = "none";
-        }
+    function showLogin() {
+      loginForm.style.left = "50px";
+      registerForm.style.left = "400px";
+      btn.style.left = "0px";
+      document.title = "Mentor LOGIN";
+    }
 
-        // Mentor Registration
-        document.getElementById("register-form").addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const email = document.getElementById("register-email").value;
-            const password = document.getElementById("register-password").value;
+    function showRegister() {
+      loginForm.style.left = "-400px";
+      registerForm.style.left = "50px";
+      btn.style.left = "125px";
+      document.title = "Mentor REGISTER";
+    }
 
-            const response = await fetch("http://localhost:3000/register", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ role: "Mentor", email, password })
-            });
+    // Default to login form
+    window.onload = showLogin;
 
-            const data = await response.json();
-            alert(data.message);
-            if (response.ok) showLogin();
-        });
+    // Mentor Registration
+    registerForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("register-email").value;
+      const password = document.getElementById("register-password").value;
 
-        // Mentor Login
-        document.getElementById("login-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const email = document.getElementById("login-email").value;
-    const password = document.getElementById("login-password").value;
+      const response = await fetch("http://localhost:3000/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role: "Mentor", email, password })
+      });
 
-    const response = await fetch("http://localhost:3000/login", {
+      const data = await response.json();
+      alert(data.message);
+      if (response.ok) showLogin();
+    });
+
+    // Mentor Login
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("login-email").value;
+      const password = document.getElementById("login-password").value;
+
+      const response = await fetch("http://localhost:3000/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password })
-    });
+      });
 
-    const data = await response.json();
-    if (response.ok) {
+      const data = await response.json();
+      if (response.ok) {
         localStorage.setItem("token", data.token);
-        localStorage.setItem("mentorId", data.mentorId); // Store mentor ID
+        localStorage.setItem("mentorId", data.mentorId);
         localStorage.setItem("mentorEmail", email);
-        
         alert("Login successful!");
-        window.location.href = "mentorpage.html"; // Redirect after login
-    } else {
+        window.location.href = "mentorpage.html";
+      } else {
         alert(data.message);
-    }
-});
-
-    </script>
+      }
+    });
+  </script>
 </body>
 </html>

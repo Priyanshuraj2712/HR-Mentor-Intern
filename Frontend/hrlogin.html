@@ -9,18 +9,21 @@
 <body>
     <div class="banner">
         <div class="form-box">
+            <!-- Button Box for Toggle -->
             <div class="button-box">
                 <div id="btn"></div>
-                <button class="toggle-btn" onclick="login()">LOG IN</button>
-                <button class="toggle-btn" onclick="register()">REGISTER</button>
+                <button class="toggle-btn" id="loginBtn" onclick="login()">LOG IN</button>
+                <button class="toggle-btn" id="registerBtn" onclick="register()">REGISTER</button>
             </div>
 
+            <!-- Login Form -->
             <form class="input" id="login-form">
                 <input type="email" id="login-email" class="input-field" placeholder="Email" required>
                 <input type="password" id="login-password" class="input-field" placeholder="Enter password" required>
                 <button type="submit" class="submit">Log In</button>
             </form>
 
+            <!-- Register Form -->
             <form class="input" id="register-form">
                 <input type="email" id="register-email" class="input-field" placeholder="Email" required>
                 <input type="password" id="register-password" class="input-field" placeholder="Enter password" required>
@@ -30,16 +33,29 @@
     </div>
 
     <script>
-        function register() {
-            document.getElementById("login-form").style.display = "none";
-            document.getElementById("register-form").style.display = "block";
-        }
+        const loginForm = document.getElementById("login-form");
+        const registerForm = document.getElementById("register-form");
+        const btn = document.getElementById("btn");
 
         function login() {
-            document.getElementById("login-form").style.display = "block";
-            document.getElementById("register-form").style.display = "none";
+        loginForm.style.left = "50px";
+        registerForm.style.left = "400px";
+        btn.style.left = "0px";
+        document.title = "Mentor LOGIN";
         }
 
+        function register() {
+        loginForm.style.left = "-400px";
+        registerForm.style.left = "50px";
+        btn.style.left = "125px";
+        document.title = "Mentor REGISTER";
+        }
+
+        // Default to login form
+        window.onload = login;
+
+
+        // Register form submission
         document.getElementById("register-form").addEventListener("submit", async (e) => {
             e.preventDefault();
             const email = document.getElementById("register-email").value;
@@ -56,6 +72,7 @@
             if (response.ok) login();
         });
 
+        // Login form submission
         document.getElementById("login-form").addEventListener("submit", async (e) => {
             e.preventDefault();
             const email = document.getElementById("login-email").value;
