@@ -14,3 +14,7 @@ Added the css file for styling of HR Login/Register page
 Updates in MentorLogin/Register Page
 <br>
 Added the css file for styling of Mentor Login/Register page
+<br>
+Create the User(HR/Mentor) schema for database
+<br>
+create the intern schema for database
