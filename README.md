@@ -23,6 +23,14 @@ Connect the backend with frontend
 <br>
 Add the about us
 <br>
-add the styling of the about us
+Add the styling of the about us
 <br>
-added the routes of the HR diffferent methods
+Add the routes of the HR and mentor diffferent methods
+<br>
+Add the hr page having the different methods
+<br>
+Add the styling of hr page
+<br>
+Add the mentor page having the different methods
+<br>
+Add the styling of mentor page

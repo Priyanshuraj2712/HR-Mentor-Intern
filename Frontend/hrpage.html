@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR page</title>
+    <link rel="stylesheet" href="hrpage.css">
+</head>
+<body>
+    <div class="banner">
+        <div class="sidebar">
+            <div>
+                <img src="./images.png" class="img" alt="logo">
+            </div>
+
+
+            <div class="links">
+                <ul>
+                    <li class="sidebar-item" data-target="IR">Interns List</li>
+                    <li class="sidebar-item" data-target="AS">Add student</li>
+                    <li class="sidebar-item" data-target="RS">Remove Student</li>
+                    <li class="sidebar-item" data-target="AM">Assign Mentor</li>
+                    <li id="logout">Logout</li>
+                </ul>
+            </div>
+
+            
+        </div>
+
+        <div class="content">
+                <div class="area">
+                    <div class="Internship_requests" id="IR">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Age</th>
+                                    <th>Mobile</th>
+                                    <th>Email</th>
+                                    <th>Permanent Address</th>
+                                    <th>Current Address</th>
+                                    <th>Education</th>
+                                    <th>Grades</th>
+                                    <th>Family DRDO</th>
+                                    <th>Past Experience</th>
+                                    <th>DRDO Labs</th>
+                                    <th>Aadhar</th>
+                                    <th>Identification Mark</th>
+                                </tr>
+                            </thead>
+                            <tbody id="internTableBody">
+                                <!-- Interns will be added here -->
+                            </tbody>
+                        </table>
+                        
+                    </div>
+                    <div class="Add_student" id="AS">
+                        <form class="editlist" id="addstudent">
+                            
+                            <h2 class="heading">Add Student For Internship</h2>
+                            <h5></h5>
+                            <input type="text" name="name" placeholder="Full Name" required>
+                            <input type="number" name="age" placeholder="Age" required>
+                            <input type="text" name="mobile" placeholder="Mobile" required>
+                            <input type="email" name="email" placeholder="Email" required>
+                            <input type="text" name="addressPermanent" placeholder="Permanent Address">
+                            <input type="text" name="addressCurrent" placeholder="Current Address">
+                            <input type="text" name="education" placeholder="Education">
+                            <input type="text" name="grades" placeholder="Grades">
+                            <input type="text" name="familyDRDO" placeholder="Family in DRDO? (Yes/No)">
+                            <input type="text" name="pastExperience" placeholder="Past Experience">
+                            <input type="text" name="drdoLabs" placeholder="DRDO Labs Worked At">
+                            <input type="text" name="aadhar" placeholder="Aadhar Number" required>
+                            <input type="text" name="identificationMark" placeholder="Identification Mark">
+                            <button type="submit">Add Intern</button>
+                        </form>
+                    </div>
+
+                    <div class="Remove_student" id="RS">
+                        <form id="remove-student">
+                            <h1>Remove Student</h1>
+                            <input type="text" name="aadhar" placeholder="Aadhar Number" required>
+                            <button type="submit" id="deleteBtn">Remove Intern</button>
+                        </form>
+                    </div>
+
+                    <div class="Assign_mentor" id="AM">
+                        <form id="assign-mentor-form">
+                            <select id="mentorId" required>
+                                <option value="">Select Mentor</option>
+                            </select>
+                            <input type="text" id="internName" placeholder="Enter Intern Name" required />
+                            <button type="submit">Assign Mentor</button>
+                        </form>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    const sidebarItems = document.querySelectorAll('.sidebar-item');
+    const sections = document.querySelectorAll('.area > div');
+
+    // Hide all sections initially
+    sections.forEach(section => {
+        section.style.display = 'none';
+    });
+
+    // Show the first section by default
+    if (sections.length > 0) {
+        sections[0].style.display = 'block';
+    }
+
+    // Add click event to each sidebar item
+    sidebarItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const targetId = item.getAttribute('data-target');
+            
+            // Hide all sections
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+
+            // Show the clicked section
+            const targetSection = document.getElementById(targetId);
+            if (targetSection) {
+                targetSection.style.display = 'block';
+            }
+        });
+    });
+});
+
+        document.addEventListener("DOMContentLoaded", () => {
+        fetchInterns();
+
+        document.getElementById("addstudent").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+
+            const response = await fetch("http://localhost:3000/add-student", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                alert("Intern added successfully!");
+                fetchInterns();
+            } else {
+                alert("Error adding intern.");
+            }
+        });
+
+        document.getElementById("remove-student").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const aadhar = event.target.aadhar.value;
+
+            const response = await fetch(`http://localhost:3000/remove-student/${aadhar}`, {
+                method: "DELETE",
+            });
+
+            if (response.ok) {
+                alert("Intern removed successfully!");
+                fetchInterns();
+            } else {
+                alert("Error removing intern.");
+            }
+        });
+
+        document.getElementById("logout").addEventListener("click", () => {
+            alert("Logged out!");
+            window.location.href = "home.html";
+        });
+    });
+
+        async function fetchInterns() {
+            const response = await fetch("http://localhost:3000/interns");
+            const interns = await response.json();
+            const tableBody = document.getElementById("internTableBody");
+            tableBody.innerHTML = interns.map(intern => `
+                <tr>
+                    <td>${intern.name}</td>
+                    <td>${intern.age}</td>
+                    <td>${intern.mobile}</td>
+                    <td>${intern.email}</td>
+                    <td>${intern.addressPermanent}</td>
+                    <td>${intern.addressCurrent}</td>
+                    <td>${intern.education}</td>
+                    <td>${intern.grades}</td>
+                    <td>${intern.familyDRDO}</td>
+                    <td>${intern.pastExperience}</td>
+                    <td>${intern.drdoLabs}</td>
+                    <td>${intern.aadhar}</td>
+                    <td>${intern.identificationMark}</td>
+                </tr>
+            `).join("");
+        }
+        async function fetchMentors() {
+            try {
+                const response = await fetch("http://localhost:3000/mentors");
+                const mentors = await response.json();
+                const mentorSelect = document.getElementById("mentorId");
+
+                mentorSelect.innerHTML = `<option value="">Select Mentor</option>`;
+                mentors.forEach(mentor => {
+                    mentorSelect.innerHTML += `<option value="${mentor.id}">${mentor.email}</option>`;
+                });
+            } catch (error) {
+                console.error("Error fetching mentors:", error);
+            }
+        }
+
+
+        async function assignMentor(event) {
+            event.preventDefault();
+            document.getElementById("assign-mentor-form").addEventListener("submit", async (event) => {
+            event.preventDefault();
+    
+            const internName = document.getElementById("internName").value.trim();
+            const mentorId = document.getElementById("mentorId").value.trim();
+
+            if (!internName || !mentorId) {
+                alert("Please enter both an intern name and a mentor ID.");
+                return;
+            }
+
+            try {
+                // Fetch intern ID by name
+                const internResponse = await fetch(`http://localhost:3000/interns?name=${internName}`);
+                const internData = await internResponse.json();
+
+                if (!internData || internData.length === 0) {
+                    alert("No intern found with this name.");
+                    return;
+                }
+
+                const internId = internData[0]._id; // Get the intern's actual ID
+
+                // Assign mentor using intern ID
+                const assignResponse = await fetch("http://localhost:3000/assign-mentor", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ internId, mentorId }),
+                });
+
+                if (assignResponse.ok) {
+                    alert("Mentor assigned successfully!");
+                } else {
+                    alert("Error assigning mentor.");
+                }
+                } catch (error) {
+                    console.error("Error:", error);
+                    alert("An error occurred while assigning the mentor.");
+                }
+            });
+                    }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchInterns();
+            fetchMentors(); // Fetch mentors when the page loads
+
+            document.getElementById("assign-mentor-form").addEventListener("submit", assignMentor);
+        });
+    </script>
+</body>
+</html>

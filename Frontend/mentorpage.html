@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor Page</title>
+    <link rel="stylesheet" href="mentorpage.css">
+</head>
+<body>
+    <div class="banner">
+        <div class="sidebar">
+            <div>
+                <img src="./images.png" class="img" alt="Logo">
+            </div>          
+            <div class="links">
+                <ul>
+                    <li onclick="one()">View Interns</li>
+                    <li id="logout">Logout</li>
+                </ul>
+            </div>
+        </div>
+        <div class="content">
+            <div class="area">
+                <!-- Section to display assigned interns -->
+                <div class="Internship_requests" id="IR">
+                    <h2>View Interns</h2>
+                    
+                    <!-- Search Bar -->
+                    <input type="text" id="searchInput" placeholder="Search by name..." onkeyup="filterInterns()">
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>Mobile</th>
+                                <th>Email</th>
+                                <th>Permanent Address</th>
+                                <th>Current Address</th>
+                                <th>Education</th>
+                                <th>Grades</th>
+                                <th>Family DRDO</th>
+                                <th>Past Experience</th>
+                                <th>DRDO Labs</th>
+                                <th>Aadhar</th>
+                                <th>Identification Mark</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="internTableBody">
+                            <!-- Interns will be added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var a = document.getElementById("IR");
+        var b = document.getElementById("TWO");
+
+        function one() {
+            a.style.display = "block";
+            b.style.display = "none";
+        }
+
+        function two() {
+            a.style.display = "none";
+            b.style.display = "block";
+        }
+
+        async function fetchInterns() {
+            console.log("Fetching interns..."); // Debug log
+            try {
+                const response = await fetch("http://localhost:3000/interns");
+                const interns = await response.json();
+                console.log("Interns data:", interns); // Debug log
+                displayInterns(interns);
+            } catch (error) {
+                console.error("Error fetching interns:", error);
+            }
+        }
+
+        function displayInterns(interns) {
+            const tableBody = document.getElementById("internTableBody");
+            tableBody.innerHTML = interns.map(intern => `
+                <tr>
+                    <td>${intern.name}</td>
+                    <td>${intern.age}</td>
+                    <td>${intern.mobile}</td>
+                    <td>${intern.email}</td>
+                    <td>${intern.addressPermanent}</td>
+                    <td>${intern.addressCurrent}</td>
+                    <td>${intern.education}</td>
+                    <td>${intern.grades}</td>
+                    <td>${intern.familyDRDO}</td>
+                    <td>${intern.pastExperience}</td>
+                    <td>${intern.drdoLabs}</td>
+                    <td>${intern.aadhar}</td>
+                    <td>${intern.identificationMark}</td>
+                    <td>
+                        <select onchange="updateInternStatus('${intern.name}', this.value)">
+                            <option value="Pending" ${intern.status === "Pending" ? "selected" : ""}>Pending</option>
+                            <option value="In Progress" ${intern.status === "In Progress" ? "selected" : ""}>In Progress</option>
+                            <option value="Completed" ${intern.status === "Completed" ? "selected" : ""}>Completed</option>
+                            <option value="Rejected" ${intern.status === "Rejected" ? "selected" : ""}>Rejected</option>
+                        </select>
+                    </td>
+                    <td><button onclick="removeIntern('${intern.aadhar}')">Remove</button></td>
+                </tr>
+            `).join("");
+        }
+
+        function filterInterns() {
+            const searchValue = document.getElementById("searchInput").value.toLowerCase();
+            const rows = document.querySelectorAll("#internTableBody tr");
+
+            rows.forEach(row => {
+                const name = row.cells[0].innerText.toLowerCase();
+                if (name.includes(searchValue)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        // Run function when page loads
+        window.onload = fetchInterns;
+
+        async function removeIntern(aadhar) {
+    if (!confirm("Are you sure you want to remove this intern?")) return;
+
+    try {
+        const response = await fetch(`http://localhost:3000/remove-student/${aadhar}`, {
+            method: "DELETE",
+        });
+
+        const data = await response.json();
+        alert(data.message);
+
+        // Refresh the intern list after removal
+        fetchInterns();
+    } catch (error) {
+        console.error("Error removing intern:", error);
+        alert("Failed to remove intern.");
+    }
+}
+
+async function updateInternStatus(internName, newStatus) {
+    try {
+        const response = await fetch(`http://localhost:3000/update-intern-status`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ name: internName, status: newStatus })
+        });
+
+        const data = await response.json();
+        alert(data.message);
+    } catch (error) {
+        console.error("Error updating status:", error);
+        alert("Failed to update intern status.");
+    }
+}
+
+document.getElementById("logout").addEventListener("click", () => {
+        alert("Logged out!");
+        window.location.href = "home.html";
+    });
+    </script>
+</body>
+</html>
